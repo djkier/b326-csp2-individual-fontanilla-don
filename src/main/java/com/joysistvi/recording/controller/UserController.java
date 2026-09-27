@@ -1,5 +1,6 @@
 package com.joysistvi.recording.controller;
 
+import com.joysistvi.recording.model.Role;
 import com.joysistvi.recording.model.User;
 import com.joysistvi.recording.service.UserService;
 
@@ -26,5 +27,17 @@ public class UserController {
 
     public List<User> handleSearchUsers(String keyword) {
         return userService.searchUsers(keyword);
+    }
+
+    public User handleAuthenticate(String username, String plainPassword) {
+        return userService.authenticate(username, plainPassword);
+    }
+
+    public boolean handleCreateUser(String username, String plainPassword, Role role) {
+        return userService.createUser(username, plainPassword, role);
+    }
+
+    public boolean handleResetPassword(int userId, String plainPassword) {
+        return userService.resetPassword(userId, plainPassword);
     }
 }

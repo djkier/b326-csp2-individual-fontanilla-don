@@ -22,14 +22,14 @@ public class UserRepoImpl implements UserRepo {
     @Override
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
-        String query = "SELECT id, username, password, role FROM users";
+        String query = "SELECT id, username, role FROM users";
 
         try (Connection conn = dbConnection.getConnection();
              Statement stmnt = conn.createStatement();
              ResultSet result = stmnt.executeQuery(query)) {
 
             while (result.next()) {
-                users.add(mapUser(result));
+                users.add(mapUserWithoutPassword(result));
             }
         } catch (SQLException e) {
             System.err.println("Get All Users Error: " + e.getMessage());
@@ -39,8 +39,27 @@ public class UserRepoImpl implements UserRepo {
     }
 
     @Override
+    public List<User> getAllUsersForPasswordMigration() {
+        List<User> users = new ArrayList<>();
+        String query = "SELECT id, username, password, role FROM users";
+
+        try (Connection conn = dbConnection.getConnection();
+             Statement stmnt = conn.createStatement();
+             ResultSet result = stmnt.executeQuery(query)) {
+
+            while (result.next()) {
+                users.add(mapUserWithPassword(result));
+            }
+        } catch (SQLException e) {
+            System.err.println("Get Users For Password Migration Error: " + e.getMessage());
+        }
+
+        return users;
+    }
+
+    @Override
     public User getUserById(int id) {
-        String query = "SELECT id, username, password, role FROM users WHERE id = ?";
+        String query = "SELECT id, username, role FROM users WHERE id = ?";
 
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement prep = conn.prepareStatement(query)) {
@@ -48,7 +67,7 @@ public class UserRepoImpl implements UserRepo {
 
             try (ResultSet result = prep.executeQuery()) {
                 if (result.next()) {
-                    return mapUser(result);
+                    return mapUserWithoutPassword(result);
                 }
             }
         } catch (SQLException e) {
@@ -68,7 +87,7 @@ public class UserRepoImpl implements UserRepo {
 
             try (ResultSet result = prep.executeQuery()) {
                 if (result.next()) {
-                    return mapUser(result);
+                    return mapUserWithPassword(result);
                 }
             }
         } catch (SQLException e) {
@@ -81,7 +100,7 @@ public class UserRepoImpl implements UserRepo {
     @Override
     public List<User> searchUsers(String keyword) {
         List<User> users = new ArrayList<>();
-        String query = "SELECT id, username, password, role FROM users WHERE username LIKE ?";
+        String query = "SELECT id, username, role FROM users WHERE username LIKE ?";
 
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement prep = conn.prepareStatement(query)) {
@@ -89,7 +108,7 @@ public class UserRepoImpl implements UserRepo {
 
             try (ResultSet result = prep.executeQuery()) {
                 while (result.next()) {
-                    users.add(mapUser(result));
+                    users.add(mapUserWithoutPassword(result));
                 }
             }
         } catch (SQLException e) {
@@ -99,11 +118,53 @@ public class UserRepoImpl implements UserRepo {
         return users;
     }
 
-    private User mapUser(ResultSet result) throws SQLException {
+    @Override
+    public boolean createUser(User user) {
+        String query = "INSERT INTO users (username, password, role) VALUES (?, ?, ?)";
+
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement prep = conn.prepareStatement(query)) {
+            prep.setString(1, user.getUsername());
+            prep.setString(2, user.getPassword());
+            prep.setString(3, user.getRole().name());
+            return prep.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Create User Error: " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean updatePassword(int userId, String passwordHash) {
+        String query = "UPDATE users SET password = ? WHERE id = ?";
+
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement prep = conn.prepareStatement(query)) {
+            prep.setString(1, passwordHash);
+            prep.setInt(2, userId);
+            return prep.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Update User Password Error: " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    private User mapUserWithPassword(ResultSet result) throws SQLException {
         return new User(
                 result.getInt("id"),
                 result.getString("username"),
                 result.getString("password"),
+                Role.valueOf(result.getString("role"))
+        );
+    }
+
+    private User mapUserWithoutPassword(ResultSet result) throws SQLException {
+        return new User(
+                result.getInt("id"),
+                result.getString("username"),
+                null,
                 Role.valueOf(result.getString("role"))
         );
     }
