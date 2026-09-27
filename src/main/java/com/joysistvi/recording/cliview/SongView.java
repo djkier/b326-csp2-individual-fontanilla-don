@@ -62,12 +62,12 @@ public class SongView {
         return InputUtility.readInt(scanner);
     }
 
-    private void viewAllSongs() {
+    public void viewAllSongs() {
         System.out.println("\n----- View All Songs -----");
         printSongs(songController.handleViewAllSongs());
     }
 
-    private void searchSongs() {
+    public void searchSongs() {
         System.out.println("\n----- Search Songs -----");
         System.out.print("Enter title, genre, album, or artist: ");
         printSongs(songController.handleSearchSongs(scanner.nextLine()));

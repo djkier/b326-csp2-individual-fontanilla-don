@@ -11,8 +11,6 @@ public class App {
         DBConnection dbConnection = new DBConnection();
         UserRepo userRepo = new UserRepoImpl(dbConnection);
         PasswordMigrationUtil passwordMigrationUtil = new PasswordMigrationUtil(userRepo);
-
-        // TEMPORARY ONE-TIME CALL: remove before introducing the normal login flow.
-        passwordMigrationUtil.migratePlaintextPasswordsToBCrypt();
+        
     }
 }

@@ -56,12 +56,12 @@ public class PlaylistView {
         return InputUtility.readInt(scanner);
     }
 
-    private void viewPlaylists(int userId) {
+    public void viewPlaylists(int userId) {
         System.out.println("\n----- My Playlists -----");
         printPlaylists(playlistController.handleViewPlaylists(userId));
     }
 
-    private void createPlaylist(int userId) {
+    public void createPlaylist(int userId) {
         System.out.println("\n----- Create Playlist -----");
         System.out.print("Playlist name: ");
         String name = scanner.nextLine();
@@ -74,7 +74,7 @@ public class PlaylistView {
         }
     }
 
-    private void managePlaylist(int userId) {
+    public void managePlaylist(int userId) {
         System.out.println("\n----- Manage a Playlist -----");
         List<Playlist> playlists = playlistController.handleViewPlaylists(userId);
         if (playlists.isEmpty()) {
@@ -153,7 +153,7 @@ public class PlaylistView {
         System.out.println(isSuccess ? "Song removed from playlist." : "Failed to remove song from playlist.");
     }
 
-    private void deletePlaylist(int userId) {
+    public void deletePlaylist(int userId) {
         System.out.println("\n----- Delete Playlist -----");
         List<Playlist> playlists = playlistController.handleViewPlaylists(userId);
         if (playlists.isEmpty()) {
