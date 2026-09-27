@@ -1,12 +1,12 @@
 package com.joysistvi.recording.cliview;
 
+import java.util.List;
+import java.util.Scanner;
+
 import com.joysistvi.recording.Utility.InputUtility;
 import com.joysistvi.recording.controller.AlbumController;
 import com.joysistvi.recording.model.Album;
 import com.joysistvi.recording.model.Artist;
-
-import java.util.List;
-import java.util.Scanner;
 
 public class AlbumView {
 
@@ -104,6 +104,8 @@ public class AlbumView {
         }
     }
 
+
+    //UPDATE AGAIN
     public void updateAlbum() {
         System.out.println("\n----- Update Albums -----");
 
@@ -143,6 +145,11 @@ public class AlbumView {
         }
     }
 
+
+
+
+
+    //archive may not be use on the finish implementation
     private void archiveAlbum() {
         System.out.println("\n----- Archive Album -----");
 
@@ -177,6 +184,8 @@ public class AlbumView {
         }
     }
 
+
+    //must be use only by the admin
     private void deleteAlbum() {
         System.out.println("\n----- Delete Album -----");
 
