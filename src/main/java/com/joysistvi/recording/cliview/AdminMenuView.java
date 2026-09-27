@@ -1,6 +1,7 @@
 package com.joysistvi.recording.cliview;
 
 import com.joysistvi.recording.Utility.InputUtility;
+import com.joysistvi.recording.Utility.CliViewUtility;
 import com.joysistvi.recording.model.Role;
 import com.joysistvi.recording.model.User;
 
@@ -37,7 +38,7 @@ public class AdminMenuView {
         int choice;
 
         do {
-            printMenu(authenticatedUser.getUsername());
+            printMenu();
             choice = promptChoice();
 
             switch (choice) {
@@ -55,9 +56,8 @@ public class AdminMenuView {
         } while (choice != 6);
     }
 
-    private void printMenu(String username) {
-        System.out.println("\n----- ADMIN Menu -----");
-        System.out.println("Logged in as: " + username);
+    private void printMenu() {
+        CliViewUtility.showHeader("Admin Menu");
         System.out.println("1. Artist Management");
         System.out.println("2. Album Management");
         System.out.println("3. Song Management");
@@ -70,7 +70,7 @@ public class AdminMenuView {
         int choice;
 
         do {
-            System.out.println("\n----- Song Catalog -----");
+            CliViewUtility.showHeader("Song Catalog");
             System.out.println("1. View All Active Songs");
             System.out.println("2. Search Songs");
             System.out.println("0. Back");

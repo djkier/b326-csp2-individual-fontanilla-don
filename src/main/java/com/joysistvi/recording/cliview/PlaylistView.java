@@ -1,6 +1,7 @@
 package com.joysistvi.recording.cliview;
 
 import com.joysistvi.recording.Utility.InputUtility;
+import com.joysistvi.recording.Utility.CliViewUtility;
 import com.joysistvi.recording.controller.PlaylistController;
 import com.joysistvi.recording.model.Playlist;
 import com.joysistvi.recording.model.Song;
@@ -48,7 +49,7 @@ public class PlaylistView {
     }
 
     private void printMenu() {
-        System.out.println("\n----- My Playlists -----");
+        CliViewUtility.showHeader("My Playlists");
         System.out.println("1. View My Playlists");
         System.out.println("2. Create Playlist");
         System.out.println("3. Manage a Playlist");
@@ -62,7 +63,7 @@ public class PlaylistView {
     }
 
     public void viewPlaylists(int userId) {
-        System.out.println("\n----- My Playlists -----");
+        CliViewUtility.showHeader("View My Playlists");
         try {
             printPlaylists(playlistController.handleViewPlaylists(userId));
         } catch (ValidationException e) {
@@ -71,7 +72,7 @@ public class PlaylistView {
     }
 
     public void createPlaylist(int userId) {
-        System.out.println("\n----- Create Playlist -----");
+        CliViewUtility.showHeader("Create Playlist");
         System.out.print("Playlist name: ");
         String name = scanner.nextLine();
 
@@ -90,7 +91,7 @@ public class PlaylistView {
     }
 
     public void managePlaylist(int userId) {
-        System.out.println("\n----- Manage a Playlist -----");
+        CliViewUtility.showHeader("Manage Playlist");
         try {
             List<Playlist> playlists = playlistController.handleViewPlaylists(userId);
             if (playlists.isEmpty()) {
@@ -115,7 +116,7 @@ public class PlaylistView {
 
     private void runPlaylistMenu(Playlist playlist, int userId) {
         while (true) {
-            System.out.println("\n----- " + playlist.getName() + " -----");
+            CliViewUtility.showHeader("Manage Playlist");
             System.out.println("1. View Songs");
             System.out.println("2. Add Song");
             System.out.println("3. Remove Song");
@@ -128,9 +129,9 @@ public class PlaylistView {
             }
 
             switch (choice) {
-                case 1 -> viewPlaylistSongs(playlist.getId(), userId);
-                case 2 -> addSong(playlist.getId(), userId);
-                case 3 -> removeSong(playlist.getId(), userId);
+                case 1 -> viewPlaylistSongs(playlist, userId);
+                case 2 -> addSong(playlist, userId);
+                case 3 -> removeSong(playlist, userId);
                 case 0 -> {
                     System.out.println("Returning to playlists...");
                     return;
@@ -142,17 +143,17 @@ public class PlaylistView {
         }
     }
 
-    private void viewPlaylistSongs(int playlistId, int userId) {
-        System.out.println("\n----- Playlist Songs -----");
+    private void viewPlaylistSongs(Playlist playlist, int userId) {
+        CliViewUtility.showHeader("Playlist Songs");
         try {
-            printSongs(playlistController.handleViewPlaylistSongs(playlistId, userId));
+            printSongs(playlistController.handleViewPlaylistSongs(playlist.getId(), userId));
         } catch (ValidationException e) {
             displayError(e.getMessage());
         }
     }
 
-    private void addSong(int playlistId, int userId) {
-        System.out.println("\n----- Add Song -----");
+    private void addSong(Playlist playlist, int userId) {
+        CliViewUtility.showHeader("Add Song");
         List<Song> songs = playlistController.handleViewAvailableSongs();
         if (songs.isEmpty()) {
             System.out.println("No active songs are available.");
@@ -168,7 +169,7 @@ public class PlaylistView {
         }
 
         try {
-            boolean isSuccess = playlistController.handleAddSong(playlistId, songId, userId);
+            boolean isSuccess = playlistController.handleAddSong(playlist.getId(), songId, userId);
             if (isSuccess) {
                 System.out.println("Song added to playlist.");
             } else {
@@ -179,10 +180,10 @@ public class PlaylistView {
         }
     }
 
-    private void removeSong(int playlistId, int userId) {
-        System.out.println("\n----- Remove Song -----");
+    private void removeSong(Playlist playlist, int userId) {
+        CliViewUtility.showHeader("Remove Song");
         try {
-            List<Song> songs = playlistController.handleViewPlaylistSongs(playlistId, userId);
+            List<Song> songs = playlistController.handleViewPlaylistSongs(playlist.getId(), userId);
             if (songs.isEmpty()) {
                 System.out.println("No songs found in this playlist.");
                 return;
@@ -196,7 +197,7 @@ public class PlaylistView {
                 return;
             }
 
-            boolean isSuccess = playlistController.handleRemoveSong(playlistId, songId, userId);
+            boolean isSuccess = playlistController.handleRemoveSong(playlist.getId(), songId, userId);
             if (isSuccess) {
                 System.out.println("Song removed from playlist.");
             } else {
@@ -208,7 +209,7 @@ public class PlaylistView {
     }
 
     public void deletePlaylist(int userId) {
-        System.out.println("\n----- Delete Playlist -----");
+        CliViewUtility.showHeader("Delete Playlist");
         try {
             List<Playlist> playlists = playlistController.handleViewPlaylists(userId);
             if (playlists.isEmpty()) {

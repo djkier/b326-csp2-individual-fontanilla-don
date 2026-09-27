@@ -1,6 +1,7 @@
 package com.joysistvi.recording.cliview;
 
 import com.joysistvi.recording.Utility.InputUtility;
+import com.joysistvi.recording.Utility.CliViewUtility;
 import com.joysistvi.recording.controller.UserController;
 import com.joysistvi.recording.model.User;
 
@@ -37,7 +38,7 @@ public class UserView {
     }
 
     private void printMenu() {
-        System.out.println("\n----- User Management -----");
+        CliViewUtility.showHeader("User Management");
         System.out.println("1. View All Users");
         System.out.println("2. Search Users");
         System.out.println("0. Back");
@@ -49,12 +50,12 @@ public class UserView {
     }
 
     private void viewAllUsers() {
-        System.out.println("\n----- View All Users -----");
+        CliViewUtility.showHeader("View All Users");
         printUsers(userController.handleViewAllUsers());
     }
 
     private void searchUsers() {
-        System.out.println("\n----- Search Users -----");
+        CliViewUtility.showHeader("Search Users");
         System.out.print("Enter username: ");
         printUsers(userController.handleSearchUsers(scanner.nextLine()));
     }

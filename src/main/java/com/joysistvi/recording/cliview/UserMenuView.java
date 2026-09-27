@@ -1,6 +1,7 @@
 package com.joysistvi.recording.cliview;
 
 import com.joysistvi.recording.Utility.InputUtility;
+import com.joysistvi.recording.Utility.CliViewUtility;
 import com.joysistvi.recording.model.Role;
 import com.joysistvi.recording.model.User;
 
@@ -28,10 +29,8 @@ public class UserMenuView {
             return;
         }
 
-        int userId = authenticatedUser.getId();
-
         while (true) {
-            printMenu(authenticatedUser.getUsername());
+            printMenu();
             Integer choice = promptChoice();
             if (choice == null) {
                 displayError("Please enter a valid menu number.");
@@ -42,7 +41,7 @@ public class UserMenuView {
             switch (choice) {
                 case 1 -> songView.viewAllSongs();
                 case 2 -> songView.searchSongs();
-                case 3 -> playlistView.run(userId);
+                case 3 -> playlistView.run(authenticatedUser.getId());
                 case 4 -> {
                     System.out.println("Logging out...");
                     return;
@@ -54,9 +53,8 @@ public class UserMenuView {
         }
     }
 
-    private void printMenu(String username) {
-        System.out.println("\n----- USER Menu -----");
-        System.out.println("Logged in as: " + username);
+    private void printMenu() {
+        CliViewUtility.showHeader("User Menu");
         System.out.println("1. View All Active Songs");
         System.out.println("2. Search Songs");
         System.out.println("3. My Playlists");

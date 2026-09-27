@@ -1,6 +1,7 @@
 package com.joysistvi.recording.cliview;
 
 import com.joysistvi.recording.Utility.InputUtility;
+import com.joysistvi.recording.Utility.CliViewUtility;
 import com.joysistvi.recording.controller.ArtistController;
 import com.joysistvi.recording.model.Artist;
 
@@ -47,7 +48,7 @@ public class ArtistView {
 
 
     private void printMenu() {
-        System.out.println("\n----- Artist Management -----");
+        CliViewUtility.showHeader("Artist Management");
         System.out.println("1. View All Artists");
         System.out.println("2. Search Artist");
         System.out.println("3. Add Artist");
@@ -65,13 +66,13 @@ public class ArtistView {
     }
 
     private void viewAllArtists() {
-        System.out.println("\n----- View All Artists -----");
+        CliViewUtility.showHeader("View All Artists");
         List<Artist> artists = artistController.handleViewAllArtists();
         printArtists(artists);
     }
 
     private void searchArtist() {
-        System.out.println("\n----- Search Artists -----");
+        CliViewUtility.showHeader("Search Artists");
         System.out.print("Enter name: ");
         String keyword = scanner.nextLine();
         List<Artist> artists = artistController.searchArtist(keyword);
@@ -79,7 +80,7 @@ public class ArtistView {
     }
 
     private void addArtists() {
-        System.out.println("\n----- Add Artists -----");
+        CliViewUtility.showHeader("Add Artist");
         System.out.print("Name: ");
         String name = scanner.nextLine();
 
@@ -95,10 +96,10 @@ public class ArtistView {
     }
 
     public void updateArtist() {
-        System.out.println("\n----- Update Artists -----");
+        CliViewUtility.showHeader("Update Artist");
 
         // Show all artists first so the admin can see which ID to pick
-        viewAllArtists();
+        printArtists(artistController.handleViewAllArtists());
 
         System.out.print("Arists ID to update: ");
         int id = InputUtility.readInt(scanner);
@@ -128,9 +129,9 @@ public class ArtistView {
     }
 
     private void archiveArtist() {
-        System.out.println("\n----- Archive Artist -----");
+        CliViewUtility.showHeader("Archive Artist");
 
-        viewAllArtists();
+        printArtists(artistController.handleViewAllArtists());
 
         System.out.print("Artist ID to archive: ");
         int id = InputUtility.readInt(scanner);
@@ -145,9 +146,9 @@ public class ArtistView {
     }
 
     private void restoreArtist() {
-        System.out.println("\n----- Restore Artist -----");
+        CliViewUtility.showHeader("Restore Artist");
 
-        viewAllArchivedArtists();
+        printArtists(artistController.handleViewArchivedArtists());
 
         System.out.print("Artist ID to restore: ");
         int id = InputUtility.readInt(scanner);
@@ -162,9 +163,9 @@ public class ArtistView {
     }
 
     private void deleteArtist() {
-        System.out.println("\n----- Delete Artist -----");
+        CliViewUtility.showHeader("Delete Artist");
 
-        viewAllArchivedArtists();
+        printArtists(artistController.handleViewArchivedArtists());
 
         System.out.print("Artist ID to delete: ");
         int id = InputUtility.readInt(scanner);
@@ -179,7 +180,7 @@ public class ArtistView {
     }
 
     private void viewAllArchivedArtists() {
-        System.out.println("\n----- View All Archived Artists -----");
+        CliViewUtility.showHeader("Archived Artists");
         List<Artist> artists = artistController.handleViewArchivedArtists();
         printArtists(artists);
     }

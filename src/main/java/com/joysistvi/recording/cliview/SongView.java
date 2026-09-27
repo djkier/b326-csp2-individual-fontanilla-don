@@ -1,6 +1,7 @@
 package com.joysistvi.recording.cliview;
 
 import com.joysistvi.recording.Utility.InputUtility;
+import com.joysistvi.recording.Utility.CliViewUtility;
 import com.joysistvi.recording.controller.SongController;
 import com.joysistvi.recording.model.Album;
 import com.joysistvi.recording.model.Song;
@@ -44,7 +45,7 @@ public class SongView {
     }
 
     private void printMenu() {
-        System.out.println("\n----- Song Management -----");
+        CliViewUtility.showHeader("Song Management");
         System.out.println("1. View All Songs");
         System.out.println("2. Search Songs");
         System.out.println("3. Add Song");
@@ -62,12 +63,12 @@ public class SongView {
     }
 
     public void viewAllSongs() {
-        System.out.println("\n----- View All Songs -----");
+        CliViewUtility.showHeader("Browse Active Songs");
         printSongs(songController.handleViewAllSongs());
     }
 
     public void searchSongs() {
-        System.out.println("\n----- Search Songs -----");
+        CliViewUtility.showHeader("Search Songs");
         System.out.print("Enter title, genre, album, or artist: ");
         String keyword = scanner.nextLine();
         if (keyword.trim().isEmpty()) {
@@ -78,7 +79,7 @@ public class SongView {
     }
 
     private void addSong() {
-        System.out.println("\n----- Add Song -----");
+        CliViewUtility.showHeader("Add Song");
 
         if (!viewAvailableAlbums()) {
             System.out.println("Add an album before creating a song.");
@@ -104,8 +105,8 @@ public class SongView {
     }
 
     private void updateSong() {
-        System.out.println("\n----- Update Song -----");
-        viewAllSongs();
+        CliViewUtility.showHeader("Update Song");
+        printSongs(songController.handleViewAllSongs());
 
         System.out.print("Song ID to update: ");
         int id = InputUtility.readInt(scanner);
@@ -150,8 +151,8 @@ public class SongView {
     }
 
     private void archiveSong() {
-        System.out.println("\n----- Archive Song -----");
-        viewAllSongs();
+        CliViewUtility.showHeader("Archive Song");
+        printSongs(songController.handleViewAllSongs());
         System.out.print("Song ID to archive: ");
         int id = InputUtility.readInt(scanner);
 
@@ -160,8 +161,8 @@ public class SongView {
     }
 
     private void restoreSong() {
-        System.out.println("\n----- Restore Song -----");
-        viewAllArchivedSongs();
+        CliViewUtility.showHeader("Restore Song");
+        printSongs(songController.handleViewArchivedSongs());
         System.out.print("Song ID to restore: ");
         int id = InputUtility.readInt(scanner);
 
@@ -170,8 +171,8 @@ public class SongView {
     }
 
     private void deleteSong() {
-        System.out.println("\n----- Delete Archived Song -----");
-        viewAllArchivedSongs();
+        CliViewUtility.showHeader("Delete Archived Song");
+        printSongs(songController.handleViewArchivedSongs());
         System.out.print("Archived Song ID to delete permanently: ");
         int id = InputUtility.readInt(scanner);
 
@@ -181,7 +182,7 @@ public class SongView {
     }
 
     private void viewAllArchivedSongs() {
-        System.out.println("\n----- View All Archived Songs -----");
+        CliViewUtility.showHeader("Archived Songs");
         printSongs(songController.handleViewArchivedSongs());
     }
 

@@ -1,6 +1,7 @@
 package com.joysistvi.recording.cliview;
 
 import com.joysistvi.recording.Utility.InputUtility;
+import com.joysistvi.recording.Utility.CliViewUtility;
 import com.joysistvi.recording.controller.UserController;
 import com.joysistvi.recording.model.Role;
 import com.joysistvi.recording.model.User;
@@ -44,7 +45,7 @@ public class LoginView {
     }
 
     private void printMenu() {
-        System.out.println("\n----- Recording Studio App -----");
+        CliViewUtility.showHeader("Recording Studio App");
         System.out.println("1. Login");
         System.out.println("0. Exit");
     }
@@ -55,7 +56,7 @@ public class LoginView {
     }
 
     private void login() {
-        System.out.println("\n----- Login -----");
+        CliViewUtility.showHeader("Login");
         System.out.print("Username: ");
         String username = scanner.nextLine();
         System.out.print("Password: ");

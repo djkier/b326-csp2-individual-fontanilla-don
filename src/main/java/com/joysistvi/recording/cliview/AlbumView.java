@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.joysistvi.recording.Utility.InputUtility;
+import com.joysistvi.recording.Utility.CliViewUtility;
 import com.joysistvi.recording.controller.AlbumController;
 import com.joysistvi.recording.model.Album;
 import com.joysistvi.recording.model.Artist;
@@ -47,7 +48,7 @@ public class AlbumView {
     }
 
     private void printMenu() {
-        System.out.println("\n----- Album Management -----");
+        CliViewUtility.showHeader("Album Management");
         System.out.println("1. View All Albums");
         System.out.println("2. Search Album");
         System.out.println("3. Add Album");
@@ -65,13 +66,13 @@ public class AlbumView {
     }
 
     private void viewAllAlbums() {
-        System.out.println("\n----- View All Albums -----");
+        CliViewUtility.showHeader("View All Albums");
         List<Album> albums = albumController.handleViewAllAlbums();
         printAlbums(albums);
     }
 
     private void searchAlbum() {
-        System.out.println("\n----- Search Albums -----");
+        CliViewUtility.showHeader("Search Albums");
         System.out.print("Enter name: ");
         String keyword = scanner.nextLine();
         List<Album> albums = albumController.searchAlbum(keyword);
@@ -79,7 +80,7 @@ public class AlbumView {
     }
 
     private void addAlbums() {
-        System.out.println("\n----- Add Albums -----");
+        CliViewUtility.showHeader("Add Album");
         System.out.print("Name: ");
         String name = scanner.nextLine();
         System.out.print("Year: ");
@@ -106,9 +107,9 @@ public class AlbumView {
 
     //UPDATE AGAIN
     public void updateAlbum() {
-        System.out.println("\n----- Update Albums -----");
+        CliViewUtility.showHeader("Update Album");
 
-        viewAllAlbums();
+        printAlbums(albumController.handleViewAllAlbums());
 
         System.out.print("Album ID to update: ");
         int id = InputUtility.readInt(scanner);
@@ -150,9 +151,9 @@ public class AlbumView {
 
     //archive may not be use on the finish implementation
     private void archiveAlbum() {
-        System.out.println("\n----- Archive Album -----");
+        CliViewUtility.showHeader("Archive Album");
 
-        viewAllAlbums();
+        printAlbums(albumController.handleViewAllAlbums());
 
         System.out.print("Album ID to archive: ");
         int id = InputUtility.readInt(scanner);
@@ -167,9 +168,9 @@ public class AlbumView {
     }
 
     private void restoreAlbum() {
-        System.out.println("\n----- Restore Album -----");
+        CliViewUtility.showHeader("Restore Album");
 
-        viewAllArchivedAlbums();
+        printAlbums(albumController.handleViewArchivedAlbums());
 
         System.out.print("Album ID to restore: ");
         int id = InputUtility.readInt(scanner);
@@ -186,9 +187,9 @@ public class AlbumView {
 
     //must be use only by the admin
     private void deleteAlbum() {
-        System.out.println("\n----- Delete Album -----");
+        CliViewUtility.showHeader("Delete Album");
 
-        viewAllArchivedAlbums();
+        printAlbums(albumController.handleViewArchivedAlbums());
 
         System.out.print("Album ID to delete: ");
         int id = InputUtility.readInt(scanner);
@@ -203,7 +204,7 @@ public class AlbumView {
     }
 
     private void viewAllArchivedAlbums() {
-        System.out.println("\n----- View All Archived Albums -----");
+        CliViewUtility.showHeader("Archived Albums");
         List<Album> albums = albumController.handleViewArchivedAlbums();
         printAlbums(albums);
     }
