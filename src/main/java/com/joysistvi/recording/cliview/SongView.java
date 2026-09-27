@@ -34,12 +34,11 @@ public class SongView {
                 case 7 -> deleteSong();
                 case 8 -> viewAllArchivedSongs();
                 case 0 -> System.out.println("Returning to main menu...");
-                default -> System.out.println("Invalid choice. Try again.");
+                default -> InputUtility.displayError("Invalid menu selection.");
             }
 
             if (choice != 0) {
-                System.out.println("\nPress Enter to continue...");
-                scanner.nextLine();
+                InputUtility.pressEnterToContinue(scanner);
             }
         } while (choice != 0);
     }
@@ -70,7 +69,12 @@ public class SongView {
     public void searchSongs() {
         System.out.println("\n----- Search Songs -----");
         System.out.print("Enter title, genre, album, or artist: ");
-        printSongs(songController.handleSearchSongs(scanner.nextLine()));
+        String keyword = scanner.nextLine();
+        if (keyword.trim().isEmpty()) {
+            InputUtility.displayError("Search keyword cannot be empty.");
+            return;
+        }
+        printSongs(songController.handleSearchSongs(keyword));
     }
 
     private void addSong() {

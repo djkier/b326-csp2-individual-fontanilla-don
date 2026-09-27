@@ -3,7 +3,9 @@ package com.joysistvi.recording.model;
 public class Artist {
     private int id;
     private String name;
-    private boolean is_archieved;
+    private boolean isArchived;
+
+
 
     public Artist(String name) {
         this.name = name;
@@ -29,6 +31,14 @@ public class Artist {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public boolean isArchived() {
+        return isArchived;
+    }
+
+    public void setIsArchived(boolean isArchived) {
+        this.isArchived = isArchived;
     }
 
     @Override

@@ -17,33 +17,26 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     @Override
     public List<Playlist> getPlaylistsByUserId(int userId) {
-        if (!isValidId(userId, "user")) {
-            return List.of();
-        }
+        validateId(userId, "user");
         return playlistRepo.getPlaylistsByUserId(userId);
     }
 
     @Override
     public Playlist getPlaylistByIdAndUserId(int playlistId, int userId) {
-        if (!hasValidOwnershipIds(playlistId, userId)) {
-            return null;
-        }
+        validateOwnershipIds(playlistId, userId);
 
         Playlist playlist = playlistRepo.getPlaylistByIdAndUserId(playlistId, userId);
         if (playlist == null) {
-            System.out.println("Playlist not found.");
+            throw new ValidationException("Playlist not found or you do not have access to it.");
         }
         return playlist;
     }
 
     @Override
     public boolean createPlaylist(String name, int userId) {
-        if (!isValidId(userId, "user")) {
-            return false;
-        }
+        validateId(userId, "user");
         if (name == null || name.trim().isEmpty()) {
-            System.out.println("Playlist name is required.");
-            return false;
+            throw new ValidationException("Playlist name is required.");
         }
 
         return playlistRepo.createPlaylist(new Playlist(name.trim(), userId));
@@ -51,9 +44,7 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     @Override
     public List<Song> getSongsByPlaylistIdAndUserId(int playlistId, int userId) {
-        if (getPlaylistByIdAndUserId(playlistId, userId) == null) {
-            return List.of();
-        }
+        getPlaylistByIdAndUserId(playlistId, userId);
         return playlistRepo.getSongsByPlaylistIdAndUserId(playlistId, userId);
     }
 
@@ -64,25 +55,20 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     @Override
     public boolean addSongToPlaylist(int playlistId, int songId, int userId) {
-        if (!hasValidPlaylistSongIds(playlistId, songId, userId)) {
-            return false;
-        }
+        validatePlaylistSongIds(playlistId, songId, userId);
         if (playlistRepo.getPlaylistByIdAndUserId(playlistId, userId) == null) {
-            System.out.println("Playlist not found.");
-            return false;
+            throw new ValidationException("Playlist not found or you do not have access to it.");
         }
 
-        Song song = songService.getSongById(songId);
+        Song song = songService.findSongById(songId);
         if (song == null) {
-            return false;
+            throw new ValidationException("Song not found.");
         }
         if (song.isArchived()) {
-            System.out.println("Archived songs cannot be added to a playlist.");
-            return false;
+            throw new ValidationException("Archived songs cannot be added to a playlist.");
         }
         if (playlistRepo.isSongInPlaylist(playlistId, songId, userId)) {
-            System.out.println("This song is already in the playlist.");
-            return false;
+            throw new ValidationException("This song is already in the playlist.");
         }
 
         return playlistRepo.addSongToPlaylist(playlistId, songId, userId);
@@ -90,16 +76,12 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     @Override
     public boolean removeSongFromPlaylist(int playlistId, int songId, int userId) {
-        if (!hasValidPlaylistSongIds(playlistId, songId, userId)) {
-            return false;
-        }
+        validatePlaylistSongIds(playlistId, songId, userId);
         if (playlistRepo.getPlaylistByIdAndUserId(playlistId, userId) == null) {
-            System.out.println("Playlist not found.");
-            return false;
+            throw new ValidationException("Playlist not found or you do not have access to it.");
         }
         if (!playlistRepo.isSongInPlaylist(playlistId, songId, userId)) {
-            System.out.println("The selected song is not in this playlist.");
-            return false;
+            throw new ValidationException("The selected song is not in this playlist.");
         }
 
         return playlistRepo.removeSongFromPlaylist(playlistId, songId, userId);
@@ -107,30 +89,27 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     @Override
     public boolean deletePlaylist(int playlistId, int userId) {
-        if (!hasValidOwnershipIds(playlistId, userId)) {
-            return false;
-        }
+        validateOwnershipIds(playlistId, userId);
         if (playlistRepo.getPlaylistByIdAndUserId(playlistId, userId) == null) {
-            System.out.println("Playlist not found.");
-            return false;
+            throw new ValidationException("Playlist not found or you do not have access to it.");
         }
 
         return playlistRepo.deletePlaylist(playlistId, userId);
     }
 
-    private boolean hasValidOwnershipIds(int playlistId, int userId) {
-        return isValidId(playlistId, "playlist") && isValidId(userId, "user");
+    private void validateOwnershipIds(int playlistId, int userId) {
+        validateId(playlistId, "playlist");
+        validateId(userId, "user");
     }
 
-    private boolean hasValidPlaylistSongIds(int playlistId, int songId, int userId) {
-        return hasValidOwnershipIds(playlistId, userId) && isValidId(songId, "song");
+    private void validatePlaylistSongIds(int playlistId, int songId, int userId) {
+        validateOwnershipIds(playlistId, userId);
+        validateId(songId, "song");
     }
 
-    private boolean isValidId(int id, String type) {
+    private void validateId(int id, String type) {
         if (id <= 0) {
-            System.out.println("Invalid " + type + " ID.");
-            return false;
+            throw new ValidationException("Invalid " + type + " ID.");
         }
-        return true;
     }
 }

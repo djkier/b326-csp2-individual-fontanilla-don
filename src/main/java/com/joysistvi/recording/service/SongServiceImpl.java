@@ -35,6 +35,14 @@ public class SongServiceImpl implements SongService {
     }
 
     @Override
+    public Song findSongById(int id) {
+        if (id <= 0) {
+            return null;
+        }
+        return songRepo.getSongById(id);
+    }
+
+    @Override
     public List<Song> searchSongs(String keyword) {
         if (keyword == null || keyword.trim().isEmpty()) {
             System.out.println("Search keyword cannot be empty.");

@@ -27,12 +27,11 @@ public class UserView {
                 case 1 -> viewAllUsers();
                 case 2 -> searchUsers();
                 case 0 -> System.out.println("Returning to main menu...");
-                default -> System.out.println("Invalid choice. Try again.");
+                default -> InputUtility.displayError("Invalid menu selection.");
             }
 
             if (choice != 0) {
-                System.out.println("\nPress Enter to continue...");
-                scanner.nextLine();
+                InputUtility.pressEnterToContinue(scanner);
             }
         } while (choice != 0);
     }

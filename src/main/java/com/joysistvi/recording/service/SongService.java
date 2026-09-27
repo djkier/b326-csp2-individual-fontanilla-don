@@ -7,6 +7,7 @@ import java.util.List;
 public interface SongService {
     List<Song> getAllSongs();
     Song getSongById(int id);
+    Song findSongById(int id);
     List<Song> searchSongs(String keyword);
     boolean createSong(Song song);
     boolean updateSong(Song song);

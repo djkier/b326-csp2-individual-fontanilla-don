@@ -13,7 +13,9 @@ public final class InputUtility {
             try {
                 return Integer.parseInt(input.trim());
             } catch (RuntimeException e) {
-                System.out.print("Please enter a valid number: ");
+                displayError("Please enter a valid number.");
+                pressEnterToContinue(scanner);
+                System.out.print("Enter a number: ");
             }
         }
     }
@@ -28,8 +30,28 @@ public final class InputUtility {
             try {
                 return Integer.parseInt(input.trim());
             } catch (RuntimeException e) {
-                System.out.print("Please enter a valid number or press Enter to keep the current: ");
+                displayError("Please enter a valid number or press Enter to keep the current value.");
+                pressEnterToContinue(scanner);
+                System.out.print("Enter a number or press Enter to keep the current value: ");
             }
         }
+    }
+
+    public static Integer readIntOrNull(Scanner scanner) {
+        String input = scanner.nextLine();
+        try {
+            return Integer.parseInt(input.trim());
+        } catch (RuntimeException e) {
+            return null;
+        }
+    }
+
+    public static void displayError(String message) {
+        System.out.println("Error: " + message);
+    }
+
+    public static void pressEnterToContinue(Scanner scanner) {
+        System.out.println("\nPress Enter to continue...");
+        scanner.nextLine();
     }
 }
